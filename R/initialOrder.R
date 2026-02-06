@@ -59,9 +59,6 @@ initialOrder <- function(dataIn, Filter, Method = "PCA", weightStart = NULL,
       updateProgress(message = "Filtering input data", value = 0.05)
     }
     
-    # @TODO: remove
-    #browser()
-    
     filtered <- filter_perc(input_GCH, input_HCG, Filter)
     
     if (is.function(updateProgress)) {

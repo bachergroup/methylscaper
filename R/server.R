@@ -356,7 +356,7 @@ server <- function(input, output, session) {
             }
 
             tempObj <- buildOrderObjectShiny(
-                sc_input_data,
+                sc_input_data, input$sm_filter,
                 input$sc_ser_method, sc_coordinatesObject,
                 updateProgress
             )
@@ -809,7 +809,7 @@ server <- function(input, output, session) {
             }
 
             tempObj <- buildOrderObjectShiny(
-                sm_input_data,
+                sm_input_data, input$sm_filter,
                 input$sm_ser_method, sm_coordinatesObject, updateProgress
             )
             sm_orderObject$order1 <- tempObj$order1

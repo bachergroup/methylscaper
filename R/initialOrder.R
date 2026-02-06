@@ -32,7 +32,7 @@
 #' data(singlemolecule_example)
 #'
 #' orderObj <- initialOrder(singlemolecule_example)
-initialOrder <- function(dataIn, Method = "PCA", weightStart = NULL,
+initialOrder <- function(dataIn, Filter, Method = "PCA", weightStart = NULL,
     weightEnd = NULL, weightFeature = "red",
     updateProgress = NULL) {
     input_GCH <- dataIn$gch
@@ -54,11 +54,21 @@ initialOrder <- function(dataIn, Method = "PCA", weightStart = NULL,
     input_GCH <- data.table::data.table(input_GCH)
     input_HCG <- data.table::data.table(input_HCG)
 
+    # Updated: If missing values in a row exceeds `Filter`% then remove
+    if (is.function(updateProgress)) {
+      updateProgress(message = "Filtering input data", value = 0.05)
+    }
+    
+    # @TODO: remove
+    #browser()
+    
+    filtered <- filter_perc(input_GCH, input_HCG, Filter)
+    
     if (is.function(updateProgress)) {
         updateProgress(message = "Recoding input data", value = 0.1)
     }
 
-    recoded <- recode(input_GCH, input_HCG)
+    recoded <- recode(filtered$input_GCH, filtered$input_HCG)
     input_GCH <- recoded$input_GCH
     input_HCG <- recoded$input_HCG
 
@@ -151,6 +161,21 @@ initialOrder <- function(dataIn, Method = "PCA", weightStart = NULL,
     return(orderObject)
 }
 
+filter_perc <- function(input_GCH, input_HCG, Filter) {
+  # proportion of non-missing per row
+  gch_nonmissing <- rowSums(!(input_GCH == "." | is.na(input_GCH))) / ncol(input_GCH)
+  hcg_nonmissing <- rowSums(!(input_HCG == "." | is.na(input_HCG))) / ncol(input_HCG)
+  
+  # Keep rows where both GCH and HCG meet minimum non-missing threshold
+  rows_keep <- (gch_nonmissing >= Filter & hcg_nonmissing >= Filter)
+  
+  if (sum(rows_keep) == 0) warning("All reads removed by non-missing filter")
+  
+  return(list(
+    input_GCH = input_GCH[rows_keep, , drop = FALSE],
+    input_HCG = input_HCG[rows_keep, , drop = FALSE]
+  ))
+}
 
 recode <- function(input_GCH, input_HCG) {
     input_GCH[input_GCH == "."] <- 99

@@ -32,7 +32,7 @@
 #' data(singlemolecule_example)
 #'
 #' orderObj <- initialOrder(singlemolecule_example)
-initialOrder <- function(dataIn, Filter, Method = "PCA", weightStart = NULL,
+initialOrder <- function(dataIn, Filter=0, Method = "PCA", weightStart = NULL,
     weightEnd = NULL, weightFeature = "red",
     updateProgress = NULL) {
     input_GCH <- dataIn$gch
@@ -160,8 +160,8 @@ initialOrder <- function(dataIn, Filter, Method = "PCA", weightStart = NULL,
 
 filter_perc <- function(input_GCH, input_HCG, Filter) {
   # proportion of non-missing per row
-  gch_nonmissing <- rowSums(!(input_GCH == "." | is.na(input_GCH))) / ncol(input_GCH)
-  hcg_nonmissing <- rowSums(!(input_HCG == "." | is.na(input_HCG))) / ncol(input_HCG)
+  gch_nonmissing <- rowSums(!(input_GCH == "." | is.na(input_GCH))) / ncol(input_GCH)*100
+  hcg_nonmissing <- rowSums(!(input_HCG == "." | is.na(input_HCG))) / ncol(input_HCG)*100
   
   # Keep rows where both GCH and HCG meet minimum non-missing threshold
   rows_keep <- (gch_nonmissing >= Filter & hcg_nonmissing >= Filter)

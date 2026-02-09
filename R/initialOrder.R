@@ -159,6 +159,8 @@ initialOrder <- function(dataIn, Filter=0, Method = "PCA", weightStart = NULL,
 }
 
 filter_perc <- function(input_GCH, input_HCG, Filter) {
+  if (is.na(Filter)) Filter = 0
+  
   # proportion of non-missing per row
   gch_nonmissing <- rowSums(!(input_GCH == "." | is.na(input_GCH))) / ncol(input_GCH)*100
   hcg_nonmissing <- rowSums(!(input_HCG == "." | is.na(input_HCG))) / ncol(input_HCG)*100
@@ -166,7 +168,15 @@ filter_perc <- function(input_GCH, input_HCG, Filter) {
   # Keep rows where both GCH and HCG meet minimum non-missing threshold
   rows_keep <- (gch_nonmissing >= Filter & hcg_nonmissing >= Filter)
   
-  if (sum(rows_keep) == 0) warning("All reads removed by non-missing filter")
+  # if (sum(rows_keep) == 0) warning("All reads removed by non-missing filter")
+  if (sum(rows_keep, na.rm = TRUE) == 0) {
+    showNotification(
+      "All reads were removed by the non-missing filter",
+      type = "error",
+      duration = 10
+    )
+    req(FALSE)  # halts execution safely
+  }
   
   return(list(
     input_GCH = input_GCH[rows_keep, , drop = FALSE],

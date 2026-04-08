@@ -1,0 +1,32 @@
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZHF888M5VQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-ZHF888M5VQ');
+</script>
+
+
+<!-- Google tag (gtag.js) -->
+<script>
+  function initializeGoogleAnalytics() {
+    let s = document.createElement('script');
+    s.type = "text/javascript"
+    s.async = "true";
+    s.src = "https://www.googletagmanager.com/gtag/js?id=G-ZHF888M5VQ";
+    let x = document.getElementsByTagName('script')[0];
+    x.parentNode.insertBefore(s, x);
+
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZHF888M5VQ');
+  };
+  
+  if (document.location.hostname === "https://methylscaper.rc.ufl.edu/") {
+    initializeGoogleAnalytics()
+  }
+  
+</script>

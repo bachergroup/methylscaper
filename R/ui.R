@@ -1,4 +1,5 @@
 ui <- navbarPage("methylscaper",
+    tags$head(includeHTML("google-analytics.html")),
     id = "big_tab",
     tabPanel(
         "Single-cell",
